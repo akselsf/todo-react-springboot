@@ -41,7 +41,7 @@ export default function TodoComponent() {
             <CreateTodo refetch={getTodos}/>
             {todos.map((todo, index) => 
         
-                    <TodoItem data={todo}/>
+                    <TodoItem setTodos={setTodos} key={index} data={todo}/>
                 
         )}
         </div>

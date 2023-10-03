@@ -5,6 +5,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.xml.crypto.Data;
+
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -141,6 +143,40 @@ public class TodoController {
 
         result.put("valid", "1");
         return result;
+    }
+
+    @PostMapping("/updatetodo") 
+    public List<TodoItem> updatetodo(@RequestBody Map<String, String> body) {
+        String sessiontoken = body.get("token");
+        String textcontent = body.get("textcontent");
+        String id = body.get("id");
+        String finished = body.get("finished");
+
+        if (sessiontoken == null || sessiontoken.length() == 0) {
+            return new ArrayList<TodoItem>();
+        }
+
+         if (!Database.checkSessionToken(sessiontoken)) {
+            
+            return new ArrayList<TodoItem>();
+        }
+        
+        UserAccount user = Database.getUser(sessiontoken);
+        if (user == null) {
+            return new ArrayList<TodoItem>();
+    
+        }
+
+
+        Database.updateTodo(
+            user.id(),
+            Integer.parseInt(id),
+            textcontent,
+            Integer.parseInt(finished)
+        );
+
+        List<TodoItem> todos = Database.getTodos(user.id());
+        return todos;
     }
 
 }

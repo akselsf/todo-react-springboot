@@ -342,4 +342,26 @@ String pass = EncryptionHandler.encrypt(password);
   return -1;
 
 }
+
+public static void updateTodo(int userid, int todoid, String textcontent, int finished) {
+   Connection con = getRemoteConnection();
+    if (con == null) {
+      System.out.println("Connection is null");
+      return;
+    }
+
+    String query = "update todoitem set textcontent = '" + textcontent + "', finished = " + finished + " where id = " + todoid + " and useraccount_id = " + userid + "";
+    try (Statement stmt = con.createStatement()) {
+      stmt.executeUpdate(query);
+    } catch (SQLException e) {
+      e.printStackTrace();
+    }
+
+    try {
+      con.close();
+    } catch (SQLException e) {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
+}
 }
